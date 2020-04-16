@@ -19,6 +19,7 @@ import com.demo.adi.model.MoviesList;
 import com.demo.adi.network.RetroFitInstance;
 import com.demo.adi.repo.MoviesRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         handlerThread.start();
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(this::doNetWorkStuff);
-        moviesRepository.getMostPopularMoviesFromDB();
-        moviesRepository.getTopRatedMoviesFromDB();
+//        moviesRepository.getMostPopularMoviesFromDB();
+//        moviesRepository.getTopRatedMoviesFromDB();
     }
 
     @Override
@@ -58,9 +59,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.sort_popular) {
-            getData();
-        } else {
+//            getData();
             getMostPopular();
+
+        } else {
+            getTopRated();
         }
 
         return super.onOptionsItemSelected(item);
@@ -81,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
                                 movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
 
                         AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
-                        AsyncTask.execute(() -> getData());
+//                        AsyncTask.execute(() -> getData());
+
+                        getMostPopular();
                     }
                 } else {
                     Log.i(TAG, "Null");
@@ -98,9 +103,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
                 if (response.body() != null) {
-                    Log.i(TAG + "Top Rated", response.body().toString());
                     List<MovieInfo> moviesList = response.body().getResults();
-                    Log.i(TAG, "onResponse: " + moviesList.size());
                     for (MovieInfo movieInfo : moviesList) {
                         MovieInfo movieInfoToSaveToDB = new MovieInfo(movieInfo.getId(), movieInfo.getPopularity(),
                                 movieInfo.getPosterPath(), movieInfo.getOriginalTitle(), movieInfo.getTitle(),
@@ -120,38 +123,46 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    private void getData() {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            GridFragment gridFragment = new GridFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("key", moviesRepository.getMostPopularMoviesFromDB());
-            Log.i(TAG, "run: "+moviesRepository.getMostPopularMoviesFromDB());
-            gridFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commitAllowingStateLoss();
-        });
-
-    }
-
+//    private void getData() {
+//        new Handler(Looper.getMainLooper()).post(() -> {
+//            GridFragment gridFragment = new GridFragment();
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelableArrayList("key", moviesRepository.getMostPopularMoviesFromDB());
+//            gridFragment.setArguments(bundle);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commitAllowingStateLoss();
+//        });
 //
-//    /**
-//     * Go back to previous activity
-//     * This will work only when using getSupportFragmentManger to start the fragments
-//     */
-//    @Override
-//    public synchronized void onBackPressed() {
-//        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-//            getSupportFragmentManager().popBackStack();
-//        } else {
-//            super.onBackPressed();
-//        }
 //    }
 
     private void getMostPopular() {
-            GridFragment gridFragment = new GridFragment();
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("key", moviesRepository.getTopRatedMoviesFromDB());
-            gridFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commitAllowingStateLoss();
+        HandlerThread handlerThread = new HandlerThread("BGThread");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(() -> {
+            final ArrayList<MovieInfo> listMovies = moviesRepository.getMostPopularMoviesFromDB();
+            runOnUiThread(() -> {
+                GridFragment gridFragment = new GridFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("key", listMovies);
+                gridFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commit();
+            });
+        });
+    }
+
+    private void getTopRated() {
+        HandlerThread handlerThread = new HandlerThread("BGThread");
+        handlerThread.start();
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(() -> {
+            final ArrayList<MovieInfo> listMovies = moviesRepository.getTopRatedMoviesFromDB();
+            runOnUiThread(() -> {
+                GridFragment gridFragment = new GridFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("key", listMovies);
+                gridFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commit();
+            });
+        });
     }
 }

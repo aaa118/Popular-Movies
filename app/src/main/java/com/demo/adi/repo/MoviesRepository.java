@@ -18,12 +18,13 @@ public class MoviesRepository {
     }
 
     public ArrayList<MovieInfo> getTopRatedMoviesFromDB() {
-        AsyncTask.execute(() -> movieTopRated = (ArrayList<MovieInfo>) movieDatabase.moviesDao().getTopRatedFromDB());
-        return movieTopRated;
+//        AsyncTask.execute(() -> movieTopRated = (ArrayList<MovieInfo>) movieDatabase.moviesDao().getTopRatedFromDB());
+        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getTopRatedFromDB();
     }
 
     public ArrayList<MovieInfo> getMostPopularMoviesFromDB() {
-        AsyncTask.execute(() -> movieInfoList = (ArrayList<MovieInfo>) movieDatabase.moviesDao().getMoviesInfo());
-        return movieInfoList;
+//        AsyncTask.execute(() -> movieInfoList = (ArrayList<MovieInfo>) movieDatabase.moviesDao().getMoviesInfo());
+        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getMoviesInfo();
+
     }
 }

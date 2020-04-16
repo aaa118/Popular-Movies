@@ -23,18 +23,15 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_detail, container, false);
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
-
         if (bundle != null) {
             singleMovie = bundle.getParcelable("movie");
         }
         ImageView imageView = view.findViewById(R.id.imageView);
-
         String baseURL = "https://image.tmdb.org/t/p/";
         String imageSize = "w185/";
         String fullPath = baseURL + imageSize + singleMovie.getPosterPath();

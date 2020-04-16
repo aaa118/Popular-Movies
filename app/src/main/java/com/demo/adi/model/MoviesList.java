@@ -24,11 +24,6 @@ public class MoviesList implements Serializable, Parcelable {
     @Expose
     private List<MovieInfo> results = null;
     public final static Parcelable.Creator<MoviesList> CREATOR = new Creator<MoviesList>() {
-
-
-        @SuppressWarnings({
-                "unchecked"
-        })
         public MoviesList createFromParcel(Parcel in) {
             return new MoviesList(in);
         }
@@ -45,9 +40,6 @@ public class MoviesList implements Serializable, Parcelable {
         this.totalResults = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.totalPages = ((Integer) in.readValue((Integer.class.getClassLoader())));
         in.readList(this.results, (MovieInfo.class.getClassLoader()));
-    }
-
-    public MoviesList() {
     }
 
     public Integer getPage() {
