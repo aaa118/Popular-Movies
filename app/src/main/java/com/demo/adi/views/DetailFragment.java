@@ -45,7 +45,8 @@ public class DetailFragment extends Fragment {
         TextView textViewReleaseDate = view.findViewById(R.id.tv_release_date);
         textViewReleaseDate.setText(singleMovie.getReleaseDate());
         TextView textViewVoteAvg = view.findViewById(R.id.tv_vote_average);
-        textViewVoteAvg.setText(singleMovie.getVoteAverage().toString());
+        String text = singleMovie.getVoteAverage().toString();
+        textViewVoteAvg.setText(text);
         TextView textViewPlot = view.findViewById(R.id.tv_plot);
         textViewPlot.setText(singleMovie.getOverview());
     }

@@ -6,4 +6,6 @@
     <string name="plot">Synopsis</string>
     <string name="avg_vote">Average Vote</string>
     <string name="poster">Poster</string>
+    <string name="sort_by_popular">Sort By Popular</string>
+    <string name="sort_by_top_rated">Sort By Top Rated</string>
 </resources>
