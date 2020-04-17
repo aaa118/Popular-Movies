@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     MovieDatabase movieDatabase;
     MoviesRepository moviesRepository;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +39,17 @@ public class MainActivity extends AppCompatActivity {
         movieDatabase = MovieDatabase.getInstance(getApplicationContext());
         moviesRepository = new MoviesRepository(movieDatabase);
 
+        Handler handler = getHandler();
+        handler.post(this::doNetWorkStuff);
+    }
+
+    /**
+     * Used for Background Task
+     */
+    private Handler getHandler() {
         HandlerThread handlerThread = new HandlerThread("BGThread");
         handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
-        handler.post(this::doNetWorkStuff);
-//        moviesRepository.getMostPopularMoviesFromDB();
-//        moviesRepository.getTopRatedMoviesFromDB();
+        return new Handler(handlerThread.getLooper());
     }
 
     @Override
@@ -57,15 +61,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.sort_popular) {
-//            getData();
             getMostPopular();
-
         } else {
             getTopRated();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
                                 movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
 
                         AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
-//                        AsyncTask.execute(() -> getData());
-
                         getMostPopular();
                     }
                 } else {
@@ -123,21 +121,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    private void getData() {
-//        new Handler(Looper.getMainLooper()).post(() -> {
-//            GridFragment gridFragment = new GridFragment();
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelableArrayList("key", moviesRepository.getMostPopularMoviesFromDB());
-//            gridFragment.setArguments(bundle);
-//            getSupportFragmentManager().beginTransaction().replace(R.id.your_placeholder, gridFragment).commitAllowingStateLoss();
-//        });
-//
-//    }
-
     private void getMostPopular() {
-        HandlerThread handlerThread = new HandlerThread("BGThread");
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
+        Handler handler = getHandler();
         handler.post(() -> {
             final ArrayList<MovieInfo> listMovies = moviesRepository.getMostPopularMoviesFromDB();
             runOnUiThread(() -> {
@@ -151,9 +136,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getTopRated() {
-        HandlerThread handlerThread = new HandlerThread("BGThread");
-        handlerThread.start();
-        Handler handler = new Handler(handlerThread.getLooper());
+        Handler handler = getHandler();
         handler.post(() -> {
             final ArrayList<MovieInfo> listMovies = moviesRepository.getTopRatedMoviesFromDB();
             runOnUiThread(() -> {
