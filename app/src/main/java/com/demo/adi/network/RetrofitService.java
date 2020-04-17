@@ -1,10 +1,6 @@
 package com.demo.adi.network;
 
-import com.demo.adi.BuildConfig;
 import com.demo.adi.model.MoviesList;
-import com.demo.adi.model.RequestToken;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -18,10 +18,6 @@ import com.squareup.picasso.Picasso;
 public class DetailFragment extends Fragment {
 
     private MovieInfo singleMovie;
-//
-//    public DetailFragment(MovieInfo singleMovie) {
-//        this.singleMovie = singleMovie;
-//    }
 
     @Nullable
     @Override

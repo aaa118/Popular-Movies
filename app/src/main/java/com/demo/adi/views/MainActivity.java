@@ -1,10 +1,5 @@
 package com.demo.adi.views;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,8 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.demo.adi.R;
-import com.demo.adi.adapters.MyAdapter;
 import com.demo.adi.db.MovieDatabase;
 import com.demo.adi.model.MovieInfo;
 import com.demo.adi.model.MoviesList;
