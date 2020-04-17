@@ -5,4 +5,5 @@
     <string name="release_date">Release Date</string>
     <string name="plot">Synopsis</string>
     <string name="avg_vote">Average Vote</string>
+    <string name="poster">Poster</string>
 </resources>

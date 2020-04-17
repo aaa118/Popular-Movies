@@ -91,9 +91,6 @@ public class MovieInfo implements Serializable, Parcelable {
         this.releaseDate = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public MovieInfo() {
-    }
-
     public MovieInfo(Integer id, Double popularity, String posterPath, String originalTitle, String title, Double voteAverage, String overview, String releaseDate) {
         this.id = id;
         this.popularity = popularity;
