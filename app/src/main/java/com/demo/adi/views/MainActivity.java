@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,8 +30,10 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AA_";
+    private static final String VIEW_ID = "viewId";
     MovieDatabase movieDatabase;
     MoviesRepository moviesRepository;
+    private int viewId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +63,44 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.sort_popular) {
+        viewId = item.getItemId();
+        Log.i(TAG, "onOptionsItemSelected: "+viewId);
+        getFragmentView();
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void getFragmentView() {
+        if (viewId == R.id.sort_popular || viewId == 0) {
             getMostPopular();
         } else {
             getTopRated();
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+//        Log.i(TAG, "onSaveInstanceState: "+viewId);
+//        super.onSaveInstanceState(outState, outPersistentState);
+//        outState.putInt(VIEW_ID, viewId);
+//    }
+
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        viewId = savedInstanceState.getInt(VIEW_ID);
+//        Log.i(TAG, "onRestoreInstanceState: "+viewId);
+//    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        getFragmentView();
     }
 
     public void doNetWorkStuff() {
@@ -76,15 +110,13 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
                 if (response.body() != null) {
                     List<MovieInfo> moviesList = response.body().getResults();
-                    Log.i(TAG, "onResponse: " + moviesList.size());
-
                     for (MovieInfo movieInfo : moviesList) {
                         MovieInfo movieInfoToSaveToDB = new MovieInfo(movieInfo.getId(), movieInfo.getPopularity(),
                                 movieInfo.getPosterPath(), movieInfo.getOriginalTitle(), movieInfo.getTitle(),
                                 movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
 
                         AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
-                        getMostPopular();
+//                        getMostPopular();
                     }
                 } else {
                     Log.i(TAG, "Null");

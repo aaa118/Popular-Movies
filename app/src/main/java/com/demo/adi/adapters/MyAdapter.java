@@ -41,7 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         MovieInfo singleMovie = movieInfoList.get(position);
         final String name = singleMovie.getTitle();
         holder.textViewTitle.setText(name);
-        holder.textViewTitle.setOnClickListener(v -> openDetailFragment(singleMovie));
+        holder.itemView.setOnClickListener(v -> openDetailFragment(singleMovie));
 
         String baseURL = "https://image.tmdb.org/t/p/";
         String imageSize = "w185/";
