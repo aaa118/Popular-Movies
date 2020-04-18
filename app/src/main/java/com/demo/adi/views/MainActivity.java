@@ -6,14 +6,18 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.PersistableBundle;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.demo.adi.R;
+import com.demo.adi.databinding.ActivityMainBinding;
 import com.demo.adi.db.MovieDatabase;
 import com.demo.adi.model.MovieInfo;
 import com.demo.adi.model.MoviesList;
@@ -30,20 +34,26 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "AA_";
-    private static final String VIEW_ID = "viewId";
     MovieDatabase movieDatabase;
     MoviesRepository moviesRepository;
     private int viewId;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         movieDatabase = MovieDatabase.getInstance(getApplicationContext());
         moviesRepository = new MoviesRepository(movieDatabase);
 
         Handler handler = getHandler();
         handler.post(this::doNetWorkStuff);
+
+        binding.btShowPopular.setOnClickListener(v -> getMostPopular());
+        binding.btShowTopRated.setOnClickListener(v -> getTopRated());
+
     }
 
     /**
@@ -100,24 +110,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        getFragmentView();
     }
 
     public void doNetWorkStuff() {
-        RetroFitInstance retroFitInstance = new RetroFitInstance();
-        retroFitInstance.getRetrofitService().getMoviesList().enqueue(new Callback<MoviesList>() {
+        RetroFitInstance.getRetrofitService().getMoviesList().enqueue(new Callback<MoviesList>() {
             @Override
             public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
                 if (response.body() != null) {
                     List<MovieInfo> moviesList = response.body().getResults();
-                    for (MovieInfo movieInfo : moviesList) {
-                        MovieInfo movieInfoToSaveToDB = new MovieInfo(movieInfo.getId(), movieInfo.getPopularity(),
-                                movieInfo.getPosterPath(), movieInfo.getOriginalTitle(), movieInfo.getTitle(),
-                                movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
-
-                        AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
-//                        getMostPopular();
-                    }
+                    saveNetworkDataToDb(moviesList);
                 } else {
                     Log.i(TAG, "Null");
                 }
@@ -129,18 +130,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        retroFitInstance.getRetrofitService().getTopRated().enqueue(new Callback<MoviesList>() {
+        RetroFitInstance.getRetrofitService().getTopRated().enqueue(new Callback<MoviesList>() {
             @Override
             public void onResponse(Call<MoviesList> call, Response<MoviesList> response) {
                 if (response.body() != null) {
                     List<MovieInfo> moviesList = response.body().getResults();
-                    for (MovieInfo movieInfo : moviesList) {
-                        MovieInfo movieInfoToSaveToDB = new MovieInfo(movieInfo.getId(), movieInfo.getPopularity(),
-                                movieInfo.getPosterPath(), movieInfo.getOriginalTitle(), movieInfo.getTitle(),
-                                movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
-
-                        AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
-                    }
+                    saveNetworkDataToDb(moviesList);
                 } else {
                     Log.i(TAG, "Null");
                 }
@@ -151,6 +146,18 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void saveNetworkDataToDb(List<MovieInfo> moviesList) {
+        for (MovieInfo movieInfo : moviesList) {
+            MovieInfo movieInfoToSaveToDB = new MovieInfo(movieInfo.getId(), movieInfo.getPopularity(),
+                    movieInfo.getPosterPath(), movieInfo.getOriginalTitle(), movieInfo.getTitle(),
+                    movieInfo.getVoteAverage(), movieInfo.getOverview(), movieInfo.getReleaseDate());
+
+            AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(movieInfoToSaveToDB));
+//                        getMostPopular();
+        }
     }
 
     private void getMostPopular() {
@@ -158,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         handler.post(() -> {
             final ArrayList<MovieInfo> listMovies = moviesRepository.getMostPopularMoviesFromDB();
             runOnUiThread(() -> {
-                GridFragment gridFragment = new GridFragment();
+                GridFragment gridFragment = getGridFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("key", listMovies);
                 gridFragment.setArguments(bundle);
@@ -167,12 +174,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private GridFragment getGridFragment() {
+        binding.btShowPopular.setVisibility(View.GONE);
+        binding.btShowTopRated.setVisibility(View.GONE);
+        return new GridFragment();
+    }
+
     private void getTopRated() {
         Handler handler = getHandler();
         handler.post(() -> {
             final ArrayList<MovieInfo> listMovies = moviesRepository.getTopRatedMoviesFromDB();
             runOnUiThread(() -> {
-                GridFragment gridFragment = new GridFragment();
+                GridFragment gridFragment = getGridFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelableArrayList("key", listMovies);
                 gridFragment.setArguments(bundle);

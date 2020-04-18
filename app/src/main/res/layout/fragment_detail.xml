@@ -6,9 +6,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_poster"
             android:layout_width="300dp"
             android:layout_height="240dp"
             android:layout_marginStart="48dp"
@@ -27,7 +27,7 @@
             android:text="@string/title"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -38,7 +38,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView1"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster" />
 
         <TextView
             android:id="@+id/textView2"
@@ -107,6 +107,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/tv_vote_average" />
+
+        <Button
+            android:id="@+id/bt_trailer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/play_trailer"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/tv_plot" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

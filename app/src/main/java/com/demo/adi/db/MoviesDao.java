@@ -15,10 +15,13 @@ import java.util.List;
 public interface MoviesDao {
 
     @Query("SELECT * FROM MovieInfo ORDER BY popularity DESC LIMIT 20")
-    List<MovieInfo> getMoviesInfo();
+    List<MovieInfo> getPopularMoviesLimitTo20();
 
     @Query("SELECT * FROM MovieInfo ORDER BY voteAverage DESC LIMIT 20")
     List<MovieInfo> getTopRatedFromDB();
+
+    @Query("SELECT * FROM MovieInfo")
+    List<MovieInfo> getAllStoredMovieInfo();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovies(MovieInfo movies);

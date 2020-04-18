@@ -16,6 +16,10 @@ public class MoviesRepository {
     }
 
     public ArrayList<MovieInfo> getMostPopularMoviesFromDB() {
-        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getMoviesInfo();
+        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getPopularMoviesLimitTo20();
+    }
+
+    public ArrayList<MovieInfo> getAllMovieInfoFromDb() {
+        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getAllStoredMovieInfo();
     }
 }
