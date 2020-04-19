@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,8 +32,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String TAG = "AA_";
+    private static final String TAG = "MainActivity";
     private static final String IS_SYNCED = "IsSynced";
     MovieDatabase movieDatabase;
     private int viewId;
@@ -51,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         setupViewModelAndObservers();
+        if (savedInstanceState == null) {
+            doNetWorkStuff();
+        }
         movieDatabase = MovieDatabase.getInstance(getApplicationContext());
         SharedPreferences sharedPref = getSharedPreferences("Network Sync", Context.MODE_PRIVATE);
         boolean isSynced = sharedPref.getBoolean(IS_SYNCED, false);
@@ -64,19 +64,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentListViewModel fragmentListViewModel = ViewModelProviders.of(this, factory).get(FragmentListViewModel.class);
 
         fragmentListViewModel.getTopRatedMoviesListLiveData().observe(this, movieInfoList -> {
-            Log.i(TAG, "onChanged: Top" + movieInfoList);
             topRatedMoviesList = movieInfoList;
         });
         fragmentListViewModel.getMostPopularMoviesListLiveData().observe(this, new Observer<List<MovieInfo>>() {
             @Override
             public void onChanged(List<MovieInfo> movieInfoList) {
-                Log.i(TAG, "onChanged: Pop " + movieInfoList);
                 mostPopularMoviesList = movieInfoList;
             }
         });
 
         fragmentListViewModel.getFavMovieList().observe(this, movieInfoList -> {
-            Log.i(TAG, "onChanged: Favs " + movieInfoList);
             favMoviesList = movieInfoList;
         });
     }
@@ -90,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         viewId = item.getItemId();
-        Log.i(TAG, "onOptionsItemSelected: " + viewId);
         getFragmentView();
         return super.onOptionsItemSelected(item);
     }

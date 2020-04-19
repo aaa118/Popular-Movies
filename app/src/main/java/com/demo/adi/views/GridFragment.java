@@ -22,7 +22,6 @@ import java.util.ArrayList;
 public class GridFragment extends Fragment {
     private static final String MOVIE_INFO_LIST = "movieInfoList";
     private ArrayList<MovieInfo> movieInfoList;
-    private static final String TAG = "AA_";
     private View mView;
 
     @Nullable
@@ -35,7 +34,6 @@ public class GridFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.i(TAG, "onSaveInstanceState: Fragment " + movieInfoList);
         outState.putParcelableArrayList(MOVIE_INFO_LIST, movieInfoList);
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -49,7 +47,6 @@ public class GridFragment extends Fragment {
         if (savedInstanceState != null) {
             movieInfoList = savedInstanceState.getParcelableArrayList(MOVIE_INFO_LIST);
         }
-        Log.i(TAG, "onViewStateRestored: " + movieInfoList);
         displayRecyclerView();
     }
 

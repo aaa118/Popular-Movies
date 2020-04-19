@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.demo.adi.R;
 import com.demo.adi.databinding.FragmentDetailBinding;
 import com.demo.adi.db.MovieDatabase;
 import com.demo.adi.model.MovieInfo;
+import com.demo.adi.model.Review;
 import com.demo.adi.model.ReviewList;
 import com.demo.adi.model.VideoQuery;
 import com.demo.adi.network.RetroFitInstance;
@@ -36,7 +38,6 @@ import retrofit2.Response;
 public class DetailFragment extends Fragment {
     private MovieInfo singleMovie;
     private FragmentDetailBinding fragmentDetailBinding;
-    private static final String TAG = "AA_";
 
     @Nullable
     @Override
@@ -57,7 +58,6 @@ public class DetailFragment extends Fragment {
         FragmentListViewModelFactory factory = FragmentListViewModelFactory.getInstance(getContext());
         FragmentListViewModel fragmentListViewModel = ViewModelProviders.of(this, factory).get(FragmentListViewModel.class);
         fragmentDetailBinding.btTrailer.setOnClickListener(v -> getKeyAndYouTubeLink());
-        Log.i(TAG, "onViewCreated: " + singleMovie.getId());
         MovieDatabase movieDatabase = MovieDatabase.getInstance(getContext());
         fragmentDetailBinding.btReview.setOnClickListener(v -> openReview());
         fragmentDetailBinding.ivFavorite.setOnClickListener(v -> fragmentListViewModel.getFavMovieList().observe(getViewLifecycleOwner(), new Observer<List<MovieInfo>>() {
@@ -105,12 +105,13 @@ public class DetailFragment extends Fragment {
     }
 
     private void getKeyAndYouTubeLink() {
-        Log.i(TAG, "getKeyAndYouTubeLink: " + singleMovie.getId());
         RetroFitInstance.getRetrofitService().getVideoForMovie(singleMovie.getId()).enqueue(new Callback<VideoQuery>() {
             @Override
             public void onResponse(Call<VideoQuery> call, Response<VideoQuery> response) {
-                if (response.body() != null) {
+                if (response.body() != null && response.body().getResults().size() > 0) {
                     watchYoutubeVideo(response.body().getResults().get(0).getKey());
+                } else {
+                    Toast.makeText(getContext(), "No Video Available", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -123,15 +124,16 @@ public class DetailFragment extends Fragment {
     }
 
     private void openReview() {
+
         RetroFitInstance.getRetrofitService().getReviewForMovie(singleMovie.getId()).enqueue(new Callback<ReviewList>() {
             @Override
             public void onResponse(Call<ReviewList> call, Response<ReviewList> response) {
-                if (response.body() != null) {
+                if (response.body() != null && response.body().getResults().size() > 0) {
                     String url = response.body().getResults().get(0).getUrl();
-                    Log.i(TAG, "onResponse: " + url);
-
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     startActivity(browserIntent);
+                } else {
+                    Toast.makeText(getContext(), "No Review Available", Toast.LENGTH_SHORT).show();
                 }
             }
 

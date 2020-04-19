@@ -21,6 +21,7 @@ public class FragmentListViewModelFactory extends ViewModelProvider.NewInstanceF
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
