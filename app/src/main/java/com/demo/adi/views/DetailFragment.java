@@ -51,22 +51,29 @@ public class DetailFragment extends Fragment {
         if (bundle != null) {
             singleMovie = bundle.getParcelable("movie");
         }
+        if (singleMovie != null && singleMovie.isFavorite()) {
+            showfavriteChecked();
+        }
+        FragmentListViewModelFactory factory = FragmentListViewModelFactory.getInstance(getContext());
+        FragmentListViewModel fragmentListViewModel = ViewModelProviders.of(this, factory).get(FragmentListViewModel.class);
         fragmentDetailBinding.btTrailer.setOnClickListener(v -> getKeyAndYouTubeLink());
-        Log.i(TAG, "onViewCreated: "+singleMovie.getId());
+        Log.i(TAG, "onViewCreated: " + singleMovie.getId());
+        MovieDatabase movieDatabase = MovieDatabase.getInstance(getContext());
         fragmentDetailBinding.btReview.setOnClickListener(v -> openReview());
-        fragmentDetailBinding.ivFavorite.setOnClickListener(v -> {
-            FragmentListViewModelFactory factory = FragmentListViewModelFactory.getInstance(getContext());
-            FragmentListViewModel fragmentListViewModel = ViewModelProviders.of(this, factory).get(FragmentListViewModel.class);
-            fragmentListViewModel.getFavMovieList().observe(getViewLifecycleOwner(), new Observer<List<MovieInfo>>() {
-                @Override
-                public void onChanged(List<MovieInfo> movieInfoList) {
-                    MovieDatabase movieDatabase = MovieDatabase.getInstance(getContext());
-                    singleMovie.setFavorite(true);
-                    fragmentListViewModel.getFavMovieList().removeObserver(this);
-                    AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(singleMovie));
-                }
-            });
-        });
+        fragmentDetailBinding.ivFavorite.setOnClickListener(v -> fragmentListViewModel.getFavMovieList().observe(getViewLifecycleOwner(), new Observer<List<MovieInfo>>() {
+            @Override
+            public void onChanged(List<MovieInfo> movieInfoList) {
+                fragmentListViewModel.getFavMovieList().removeObserver(this);
+                checkFavoritesIcon(movieDatabase);
+            }
+        }));
+        fragmentDetailBinding.ivFavoriteChecked.setOnClickListener(v -> fragmentListViewModel.getFavMovieList().observe(getViewLifecycleOwner(), new Observer<List<MovieInfo>>() {
+            @Override
+            public void onChanged(List<MovieInfo> movieInfoList) {
+                fragmentListViewModel.getFavMovieList().removeObserver(this);
+                checkFavoritesIcon(movieDatabase);
+            }
+        }));
         String baseURL = "https://image.tmdb.org/t/p/";
         String imageSize = "w185/";
         String fullPath = baseURL + imageSize + singleMovie.getPosterPath();
@@ -77,6 +84,24 @@ public class DetailFragment extends Fragment {
         String text = singleMovie.getVoteAverage().toString();
         fragmentDetailBinding.tvVoteAverage.setText(text);
         fragmentDetailBinding.tvPlot.setText(singleMovie.getOverview());
+    }
+
+    private void checkFavoritesIcon(MovieDatabase movieDatabase) {
+        if (!singleMovie.isFavorite()) {
+            singleMovie.setFavorite(true);
+            showfavriteChecked();
+            AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(singleMovie));
+        } else {
+            singleMovie.setFavorite(false);
+            fragmentDetailBinding.ivFavorite.setVisibility(View.VISIBLE);
+            fragmentDetailBinding.ivFavoriteChecked.setVisibility(View.GONE);
+            AsyncTask.execute(() -> movieDatabase.moviesDao().insertMovies(singleMovie));
+        }
+    }
+
+    private void showfavriteChecked() {
+        fragmentDetailBinding.ivFavorite.setVisibility(View.GONE);
+        fragmentDetailBinding.ivFavoriteChecked.setVisibility(View.VISIBLE);
     }
 
     private void getKeyAndYouTubeLink() {

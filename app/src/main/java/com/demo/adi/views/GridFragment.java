@@ -43,16 +43,6 @@ public class GridFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        Log.i(TAG, "onActivityCreated: "+movieInfoList);
-//        super.onActivityCreated(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            movieInfoList = savedInstanceState.getParcelableArrayList(MOVIE_INFO_LIST);
-//        }
-//        displayRecyclerView();
-//    }
-
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -62,11 +52,6 @@ public class GridFragment extends Fragment {
         Log.i(TAG, "onViewStateRestored: " + movieInfoList);
         displayRecyclerView();
     }
-
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        displayRecyclerView();
-//    }
 
     private void displayRecyclerView() {
         RecyclerView recyclerView;
