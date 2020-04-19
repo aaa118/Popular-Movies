@@ -1,8 +1,11 @@
 package com.demo.adi.repo;
 
+import androidx.lifecycle.LiveData;
+
 import com.demo.adi.db.MovieDatabase;
 import com.demo.adi.model.MovieInfo;
-import java.util.ArrayList;
+
+import java.util.List;
 
 public class MoviesRepository {
     private MovieDatabase movieDatabase;
@@ -11,15 +14,15 @@ public class MoviesRepository {
         this.movieDatabase = movieDatabase;
     }
 
-    public ArrayList<MovieInfo> getTopRatedMoviesFromDB() {
-        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getTopRatedFromDB();
+    public LiveData<List<MovieInfo>> getTopRatedMoviesFromDB() {
+        return  movieDatabase.moviesDao().getTopRatedFromDB();
     }
 
-    public ArrayList<MovieInfo> getMostPopularMoviesFromDB() {
-        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getPopularMoviesLimitTo20();
+    public LiveData<List<MovieInfo>> getMostPopularMoviesFromDB() {
+        return  movieDatabase.moviesDao().getPopularMoviesLimitTo20();
     }
 
-    public ArrayList<MovieInfo> getAllMovieInfoFromDb() {
-        return (ArrayList<MovieInfo>) movieDatabase.moviesDao().getAllStoredMovieInfo();
+    public LiveData<List<MovieInfo>> getAllMovieInfoFromDb() {
+        return movieDatabase.moviesDao().getAllFavMovieList();
     }
 }

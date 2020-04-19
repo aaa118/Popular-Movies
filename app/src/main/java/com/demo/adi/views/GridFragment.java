@@ -70,7 +70,7 @@ public class GridFragment extends Fragment {
 
     private void displayRecyclerView() {
         RecyclerView recyclerView;
-        RecyclerView.Adapter mAdapter;
+        MyAdapter mAdapter;
         RecyclerView.LayoutManager layoutManager;
         recyclerView = mView.findViewById(R.id.rl_movies_list);
         recyclerView.setHasFixedSize(true);
@@ -82,6 +82,7 @@ public class GridFragment extends Fragment {
             movieInfoList = bundle.getParcelableArrayList("key");
         }
         mAdapter = new MyAdapter(movieInfoList, getFragmentManager());
+        mAdapter.setTasks(movieInfoList);
         recyclerView.setAdapter(mAdapter);
     }
 

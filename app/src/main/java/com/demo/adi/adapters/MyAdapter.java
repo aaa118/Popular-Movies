@@ -58,6 +58,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         context.beginTransaction().replace(R.id.your_placeholder, detailFragment).addToBackStack("Test").commit();
     }
 
+    /**
+     * When data changes, this method updates the list of taskEntries
+     * and notifies the adapter to use the new values on it
+     */
+    public void setTasks(List<MovieInfo> movieInfoList) {
+        this.movieInfoList = movieInfoList;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
