@@ -62,20 +62,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewModelAndObservers() {
         FragmentListViewModelFactory factory =  FragmentListViewModelFactory.getInstance(getApplicationContext());
         FragmentListViewModel fragmentListViewModel = ViewModelProviders.of(this, factory).get(FragmentListViewModel.class);
-
-        fragmentListViewModel.getTopRatedMoviesListLiveData().observe(this, movieInfoList -> {
-            topRatedMoviesList = movieInfoList;
-        });
-        fragmentListViewModel.getMostPopularMoviesListLiveData().observe(this, new Observer<List<MovieInfo>>() {
-            @Override
-            public void onChanged(List<MovieInfo> movieInfoList) {
-                mostPopularMoviesList = movieInfoList;
-            }
-        });
-
-        fragmentListViewModel.getFavMovieList().observe(this, movieInfoList -> {
-            favMoviesList = movieInfoList;
-        });
+        fragmentListViewModel.getTopRatedMoviesListLiveData().observe(this, movieInfoList -> topRatedMoviesList = movieInfoList);
+        fragmentListViewModel.getMostPopularMoviesListLiveData().observe(this, movieInfoList -> mostPopularMoviesList = movieInfoList);
+        fragmentListViewModel.getFavMovieList().observe(this, movieInfoList -> favMoviesList = movieInfoList);
     }
 
     @Override
