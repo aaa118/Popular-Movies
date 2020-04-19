@@ -60,6 +60,7 @@ public class MovieInfo implements Serializable, Parcelable {
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+    private boolean isFavorite;
     public final static Parcelable.Creator<MovieInfo> CREATOR = new Creator<MovieInfo>() {
 
 
@@ -253,5 +254,13 @@ public class MovieInfo implements Serializable, Parcelable {
                 ", overview='" + overview + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 '}';
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

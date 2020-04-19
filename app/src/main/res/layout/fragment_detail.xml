@@ -6,28 +6,62 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="300dp"
+            android:id="@+id/iv_poster"
+            android:layout_width="200dp"
             android:layout_height="240dp"
             android:layout_marginStart="48dp"
             android:layout_marginTop="48dp"
+            android:contentDescription="@string/poster"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_launcher_background"
-            android:contentDescription="@string/poster" />
+            app:srcCompat="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_favorite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/click_below_to_favorite"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="48dp"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_favorite"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/favorite"
+            android:src="@drawable/hear_checked"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_favorite"
+            app:srcCompat="@drawable/ic_launcher_background" />
+        <ImageView
+            android:id="@+id/iv_favorite_checked"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/favorite"
+            android:src="@drawable/heart_unchecked"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/iv_poster"
+            app:layout_constraintTop_toBottomOf="@+id/tv_favorite"
+            app:srcCompat="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/textView1"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_horizontal_margin"
+            app:layout_constraintHorizontal_bias="1.0"
             android:text="@string/title"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -38,7 +72,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView1"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_poster" />
 
         <TextView
             android:id="@+id/textView2"
@@ -107,6 +141,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/tv_vote_average" />
+
+        <Button
+            android:id="@+id/bt_trailer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/play_trailer"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/tv_plot" />
+
+        <Button
+            android:id="@+id/bt_review"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:text="@string/open_review"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@id/textView4"
+            app:layout_constraintTop_toBottomOf="@+id/bt_trailer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

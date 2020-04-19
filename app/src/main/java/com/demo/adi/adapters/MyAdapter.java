@@ -32,7 +32,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public MyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_layout, parent, false);
-        // set the view's size, margins, paddings and layout parameters
+        // set the view's size, margins, padding and layout parameters
         return new ViewHolder(v);
     }
 
@@ -41,7 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         MovieInfo singleMovie = movieInfoList.get(position);
         final String name = singleMovie.getTitle();
         holder.textViewTitle.setText(name);
-        holder.textViewTitle.setOnClickListener(v -> openDetailFragment(singleMovie));
+        holder.itemView.setOnClickListener(v -> openDetailFragment(singleMovie));
 
         String baseURL = "https://image.tmdb.org/t/p/";
         String imageSize = "w185/";
@@ -58,13 +58,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         context.beginTransaction().replace(R.id.your_placeholder, detailFragment).addToBackStack("Test").commit();
     }
 
+    /**
+     * When data changes, this method updates the list of taskEntries
+     * and notifies the adapter to use the new values on it
+     */
+    public void setTasks(List<MovieInfo> movieInfoList) {
+        this.movieInfoList = movieInfoList;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
         return movieInfoList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         ImageView ivPoster;
 

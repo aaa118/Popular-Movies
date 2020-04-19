@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.demo.adi.model.MovieInfo;
 
-@Database(entities = MovieInfo.class, version = 1, exportSchema = false)
+@Database(entities = MovieInfo.class, version = 2, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "movies_db";
@@ -24,6 +24,5 @@ public abstract class MovieDatabase extends RoomDatabase {
     }
 
     public abstract MoviesDao moviesDao();
-
 
 }
